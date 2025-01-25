@@ -1,34 +1,34 @@
 - name: Installing mysql libraries
-    ansible.builtin.pip:
-      name: "{{ item }}"
-      executable: pip3.9
-    loop:
-    - cryptography
-    - PyMySQL
-  
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    executable: pip3.9
+  loop:
+  - cryptography
+  - PyMySQL
+
 - name: Installing sql server
-    ansible.builtin.package:
-      name: mysql-server
-      state: installed
+  ansible.builtin.package:
+    name: mysql-server
+    state: installed
 
 - name: Starting serivces and enabling it
-    ansible.builtin.service:
-      name: mysqld
-      state: started
-      enabled: yes
+  ansible.builtin.service:
+    name: mysqld
+    state: started
+    enabled: yes
 
 - name: establishing sql root server
-    community.mysql.mysql_info:
-      login_user: root
-      login_password: "{{ mysql_passwd }}"
-      login_host: mysql.techgama.site
-    ignore_errors: yes
-    register: mysql_info
+  community.mysql.mysql_info:
+    login_user: root
+    login_password: "{{ mysql_passwd }}"
+    login_host: mysql.techgama.site
+  ignore_errors: yes
+  register: mysql_info
 
 - name: print the output
-    ansible.builtin.debug:
-      msg: "MYSQL Info :: {{ mysql_info }}"
+  ansible.builtin.debug:
+    msg: "MYSQL Info :: {{ mysql_info }}"
 
 - name: setting up the root password
-    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_passwd }}"
-    when: mysql_info.failed is true
+  ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_passwd }}"
+  when: mysql_info.failed is true
