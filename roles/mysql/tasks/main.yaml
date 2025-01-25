@@ -6,18 +6,18 @@
     - cryptography
     - PyMySQL
   
-  - name: Installing sql server
+- name: Installing sql server
     ansible.builtin.package:
       name: mysql-server
       state: installed
 
-  - name: Starting serivces and enabling it
+- name: Starting serivces and enabling it
     ansible.builtin.service:
       name: mysqld
       state: started
       enabled: yes
 
-  - name: establishing sql root server
+- name: establishing sql root server
     community.mysql.mysql_info:
       login_user: root
       login_password: "{{ mysql_passwd }}"
@@ -25,10 +25,10 @@
     ignore_errors: yes
     register: mysql_info
 
-  - name: print the output
+- name: print the output
     ansible.builtin.debug:
       msg: "MYSQL Info :: {{ mysql_info }}"
 
-  - name: setting up the root password
+- name: setting up the root password
     ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_passwd }}"
     when: mysql_info.failed is true
